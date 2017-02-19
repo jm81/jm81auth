@@ -1,0 +1,3 @@
+= Jm81auth
+
+This project rocks and uses MIT-LICENSE.
