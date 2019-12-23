@@ -5,10 +5,15 @@ module Jm81auth
         base.extend ClassMethods
 
         base.class_eval do
-          plugin :timestamps
+          if respond_to? :belongs_to
+            belongs_to :auth_method
+            belongs_to :user
+          else
+            plugin :timestamps
 
-          many_to_one :auth_method
-          many_to_one :user
+            many_to_one :auth_method
+            many_to_one :user
+          end
         end
       end
 
@@ -17,7 +22,13 @@ module Jm81auth
 
       # Set #closed_at. Called, for example, when logging out.
       def close!
-        self.update(closed_at: Time.now) unless self.closed_at
+        unless self.closed_at
+          if respond_to? :update_attributes!
+            self.update_attributes! closed_at: Time.now
+          else
+            self.update closed_at: Time.now
+          end
+        end
       end
 
       # @return [String]
@@ -84,7 +95,11 @@ module Jm81auth
           auth_token = decode token
 
           if auth_token && !auth_token.expired?
-            auth_token.update(last_used_at: Time.now)
+            if respond_to? :update_attributes!
+              auth_token.update_attributes! last_used_at: Time.now
+            else
+              auth_token.update last_used_at: Time.now
+            end
             auth_token
           else
             nil

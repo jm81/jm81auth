@@ -7,8 +7,13 @@ module Jm81auth
         base.extend ClassMethods
 
         base.class_eval do
-          one_to_many :auth_methods
-          one_to_many :auth_tokens
+          if respond_to? :has_many
+            has_many :auth_methods
+            has_many :auth_tokens
+          else
+            one_to_many :auth_methods
+            one_to_many :auth_tokens
+          end
         end
       end
 

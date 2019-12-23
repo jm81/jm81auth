@@ -5,8 +5,13 @@ module Jm81auth
         base.extend ClassMethods
 
         base.class_eval do
-          many_to_one :user
-          one_to_many :auth_tokens
+          if respond_to? :belongs_to
+            belongs_to :user
+            has_many :auth_tokens
+          else
+            many_to_one :user
+            one_to_many :auth_tokens
+          end
         end
       end
 
@@ -14,7 +19,11 @@ module Jm81auth
       #
       # @return [AuthToken]
       def create_token
-        add_auth_token user: user, last_used_at: Time.now.utc
+        if respond_to? :belongs_to
+          auth_tokens.create! user: user, last_used_at: Time.now.utc
+        else
+          add_auth_token user: user, last_used_at: Time.now.utc
+        end
       end
 
       module ClassMethods
