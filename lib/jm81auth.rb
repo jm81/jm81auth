@@ -20,5 +20,6 @@ require 'jm81auth/models/user'
 require 'jm81auth/oauth/base'
 require 'jm81auth/oauth/facebook'
 require 'jm81auth/oauth/github'
+require 'jm81auth/oauth/google'
 
 require 'jm81auth/version'
