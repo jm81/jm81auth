@@ -19,10 +19,10 @@ module Jm81auth
       #
       # @return [AuthToken]
       def create_token
-        if respond_to? :belongs_to
-          auth_tokens.create! user: user, last_used_at: Time.now.utc
-        else
+        if self.respond_to? :add_auth_token
           add_auth_token user: user, last_used_at: Time.now.utc
+        else
+          auth_tokens.create! user: user, last_used_at: Time.now.utc
         end
       end
 

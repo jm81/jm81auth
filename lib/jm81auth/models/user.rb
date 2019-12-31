@@ -50,7 +50,11 @@ module Jm81auth
               display_name: oauth.display_name
             )
 
-            method = user.add_auth_method oauth.provider_data
+            if user.respond_to? :add_auth_method
+              method = user.add_auth_method oauth.provider_data
+            else
+              method = user.auth_methods.create! oauth.provider_data
+            end
           end
 
           method.create_token

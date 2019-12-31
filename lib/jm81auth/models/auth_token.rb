@@ -65,7 +65,11 @@ module Jm81auth
             token, config.jwt_secret, config.jwt_algorithm
           ).first
 
-          auth_token = self[payload['auth_token_id']]
+          if self.respond_to? :[]
+            auth_token = self[payload['auth_token_id']]
+          else
+            auth_token = find payload['auth_token_id']
+          end
 
           if payload['auth_token_id'].nil?
             raise DecodeError, "auth_token_id missing: #{payload}"
