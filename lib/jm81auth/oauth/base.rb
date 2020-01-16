@@ -4,6 +4,8 @@
 module Jm81auth
   module OAuth
     class Base
+      attr_reader :access_token
+
       # Setup @params from params param (Har, har). Also, set @access_token,
       # either from params Hash, or by calling #get_access_token. @params is the
       # expected params needed by #get_access_token.

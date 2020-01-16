@@ -45,10 +45,7 @@ module Jm81auth
           method = ::AuthMethod.by_provider_data oauth.provider_data
 
           if !method
-            user = find_by_email(oauth.email) || create(
-              email: oauth.email.downcase,
-              display_name: oauth.display_name
-            )
+            user = find_by_email(oauth.email) || create_from_oauth(oauth)
 
             if user.respond_to? :add_auth_method
               method = user.add_auth_method oauth.provider_data
@@ -57,7 +54,20 @@ module Jm81auth
             end
           end
 
-          method.create_token
+          method.create_token access_token: oauth.access_token
+        end
+
+        # Create User based on oauth data.
+        #
+        # @param oauth [OAuth::Base]
+        #   OAuth login object, include #provider_data (Hash with provider_name
+        #   and provider_id), #email and #display_name.
+        # @return [User]
+        def create_from_oauth oauth
+          create(
+            email: oauth.email.downcase,
+            display_name: oauth.display_name
+          )
         end
       end
     end

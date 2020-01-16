@@ -105,6 +105,7 @@ RSpec.describe User, type: :model do
     context 'existing AuthMethod' do
       before(:each) do
         expect(oauth).to_not receive(:email)
+        expect(oauth).to receive(:access_token)
 
         expect(oauth).to receive(:provider_data) do
           { provider_name: 'github', provider_id: 5 }
@@ -133,6 +134,8 @@ RSpec.describe User, type: :model do
 
     context 'no existing AuthMethod' do
       before(:each) do
+        expect(oauth).to receive(:access_token)
+
         expect(oauth).to receive(:provider_data).twice do
           { provider_name: 'github', provider_id: 10 }
         end

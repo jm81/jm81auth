@@ -15,15 +15,22 @@ module Jm81auth
         end
       end
 
-      # Create AuthToken, setting user and last_used_at
+      # Create AuthToken, setting user and last_used_at, and optionally
+      # access_token from the Oauth provider.
       #
       # @return [AuthToken]
-      def create_token
-        if self.respond_to? :add_auth_token
-          add_auth_token user: user, last_used_at: Time.now.utc
-        else
-          auth_tokens.create! user: user, last_used_at: Time.now.utc
+      def create_token access_token: nil
+        auth_token = ::AuthToken.new
+        auth_token.auth_method = self
+        auth_token.user = user
+        auth_token.last_used_at = Time.now.utc
+
+        if auth_token.respond_to? :access_token=
+          auth_token.access_token = access_token
         end
+
+        auth_token.save
+        auth_token
       end
 
       module ClassMethods
