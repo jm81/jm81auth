@@ -6,8 +6,8 @@ module Jm81auth
 
         base.class_eval do
           if respond_to? :belongs_to
-            belongs_to :auth_method
-            belongs_to :user
+            belongs_to :auth_method, required: false
+            belongs_to :user, required: false
           else
             plugin :timestamps
 
